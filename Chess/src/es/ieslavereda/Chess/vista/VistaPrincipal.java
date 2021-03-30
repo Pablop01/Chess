@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import es.ieslavereda.Chess.model.common.Celda;
+import es.ieslavereda.Chess.model.common.Coordenada;
 import es.ieslavereda.Chess.model.common.Tablero;
 
 import javax.swing.GroupLayout;
@@ -18,9 +20,11 @@ import javax.swing.JSeparator;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import java.awt.Color;
+import javax.swing.border.LineBorder;
 
 public class VistaPrincipal extends JFrame {
 
@@ -29,6 +33,7 @@ public class VistaPrincipal extends JFrame {
 	private JPanel panelTurnos;
 	private JPanel panelMovimientos;
 	private JPanel panelEliminados;
+	private Tablero t;
 
 
 	/**
@@ -71,7 +76,8 @@ public class VistaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		panelTablero = new Tablero();
+		t = new Tablero();
+		panelTablero = t;
 		panelTablero.setBounds(new Rectangle(0, 0, 500, 500));
 		
 		panelEliminados = new JPanel();
@@ -116,5 +122,8 @@ public class VistaPrincipal extends JFrame {
 		return panelTablero;
 	}
 	
+	public HashMap<Coordenada, Celda> getTablero() {
+		return t.getTablero();
+	}
 	
 }

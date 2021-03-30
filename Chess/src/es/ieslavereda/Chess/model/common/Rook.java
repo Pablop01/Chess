@@ -1,5 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author ppereaf
@@ -34,7 +36,7 @@ public class Rook extends Pieza {
 	 */
 	
 	@Override
-	public Lista<Coordenada> getNextMovements() {
+	public ArrayList<Coordenada> getNextMovements() {
 		
 		return getNextMovements(this);
 	}
@@ -45,47 +47,47 @@ public class Rook extends Pieza {
 	 * @return Lista de coordenadas
 	 */
 	
-	public static Lista<Coordenada> getNextMovements(Pieza p){
+	public static ArrayList<Coordenada> getNextMovements(Pieza p){
 		
 		Tablero t = p.tablero;
-		Lista<Coordenada> lista = new Lista<>();
+		ArrayList<Coordenada> lista = new ArrayList<>();
 		Coordenada c;
 		
 		// UP 
 		c= p.posicion.up();
 		while(t.contiene(c) && t.getPiezaAt(c)==null) {
-			lista.addHead(c);
+			lista.add(c);
 			c=c.up();
 		}
 		if(t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor()) 
-			lista.addHead(c);
+			lista.add(c);
 		
 		// Right
 		c= p.posicion.right();
 		while(t.contiene(c) && t.getPiezaAt(c)==null) {
-			lista.addHead(c);
+			lista.add(c);
 			c=c.right();
 		}
 		if(t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor()) 
-			lista.addHead(c);
+			lista.add(c);
 		
 		// Down
 		c= p.posicion.down();
 		while(t.contiene(c) && t.getPiezaAt(c)==null) {
-			lista.addHead(c);
+			lista.add(c);
 			c=c.down();
 		}
 		if(t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor()) 
-			lista.addHead(c);
+			lista.add(c);
 		
 		// Left
 		c= p.posicion.left();
 		while(t.contiene(c) && t.getPiezaAt(c)==null) {
-			lista.addHead(c);
+			lista.add(c);
 			c=c.left();
 		}
 		if(t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor()) 
-			lista.addHead(c);
+			lista.add(c);
 		
 		return lista;
 	}

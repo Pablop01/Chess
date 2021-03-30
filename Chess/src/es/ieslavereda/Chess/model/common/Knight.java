@@ -1,5 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author ppereaf
@@ -33,9 +35,9 @@ public class Knight extends Pieza {
 	 */
 	
 	@Override
-	public Lista<Coordenada> getNextMovements() {
+	public ArrayList<Coordenada> getNextMovements() {
 
-		Lista<Coordenada> lista = new Lista<Coordenada>();
+		ArrayList<Coordenada> lista = new ArrayList<Coordenada>();
 
 		addCoordenada(posicion.up().up().right(), lista);
 		addCoordenada(posicion.up().up().left(), lista);
@@ -58,13 +60,13 @@ public class Knight extends Pieza {
 	 * @param lista Lista de los siguientes movimientos
 	 */
 	
-	private void addCoordenada(Coordenada c, Lista<Coordenada> lista) {
+	private void addCoordenada(Coordenada c, ArrayList<Coordenada> lista) {
 		if (tablero.contiene(c)) {
 			if (tablero.getCeldaAt(c).contienePieza()) {
 				if (tablero.getCeldaAt(c).getPieza().getColor() != getColor())
-					lista.addHead(c);
+					lista.add(c);
 			} else {
-				lista.addHead(c);
+				lista.add(c);
 			}
 		}
 	}

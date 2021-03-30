@@ -1,5 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author ppereaf
@@ -33,9 +35,9 @@ public class Queen extends Pieza{
 	 */
 	
 	@Override
-	public Lista<Coordenada> getNextMovements() {
+	public ArrayList<Coordenada> getNextMovements() {
 		
-		Lista<Coordenada> lista = Rook.getNextMovements(this);
+		ArrayList<Coordenada> lista = Rook.getNextMovements(this);
 		
 		lista.addAll(Bishop.getNextMovements(this));
 		

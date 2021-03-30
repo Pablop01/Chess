@@ -1,6 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
 import java.awt.Component;
+import java.util.ArrayList;
 
 /**
  * 
@@ -99,7 +100,7 @@ public abstract class Pieza {
 		return false;
 	}
 	
-	public abstract Lista<Coordenada> getNextMovements();
+	public abstract ArrayList<Coordenada> getNextMovements();
 	
 }
 

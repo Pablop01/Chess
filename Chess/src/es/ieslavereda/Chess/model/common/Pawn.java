@@ -1,5 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author ppereaf
@@ -10,11 +12,12 @@ public class Pawn extends Pieza {
 
 	/**
 	 * Constructor de la pieza de tipo Peon
-	 * @param color Para obtener el color del que queremos la pieza
+	 * 
+	 * @param color    Para obtener el color del que queremos la pieza
 	 * @param posicion Indica la posicion inicial de la pieza
-	 * @param tablero Tablero en el que esta la pieza
+	 * @param tablero  Tablero en el que esta la pieza
 	 */
-	
+
 	public Pawn(Color color, Coordenada posicion, Tablero tablero) {
 		super(posicion, tablero);
 
@@ -24,19 +27,20 @@ public class Pawn extends Pieza {
 			tipo = Tipo.BLACK_PAWN;
 
 		colocate(posicion);
-		
+
 	}
 
 	/**
-	 * Devuelve la lista de movimientos disponibles despues de hacer todas las comprobaciones necesarias
+	 * Devuelve la lista de movimientos disponibles despues de hacer todas las
+	 * comprobaciones necesarias
+	 * 
 	 * @return Lista de coordenadas
 	 */
-	
-	
-	@Override
-	public Lista<Coordenada> getNextMovements() {
 
-		Lista<Coordenada> lista = new Lista<Coordenada>();
+	@Override
+	public ArrayList<Coordenada> getNextMovements() {
+
+		ArrayList<Coordenada> lista = new ArrayList<Coordenada>();
 
 		if (getColor() == Color.WHITE) {
 
@@ -51,7 +55,9 @@ public class Pawn extends Pieza {
 				}
 
 			} else {
-				addCoordenada(posicion.up(), lista);
+				if (tablero.getCeldaAt(posicion.up()).contienePieza() == false) {
+					addCoordenada(posicion.up(), lista);
+				}
 			}
 
 			if (tablero.contiene(posicion.diagonalUpLeft()) && tablero.getPiezaAt(posicion.diagonalUpLeft()) != null) {
@@ -76,7 +82,9 @@ public class Pawn extends Pieza {
 				}
 
 			} else {
-				addCoordenada(posicion.down(), lista);
+				if (tablero.getCeldaAt(posicion.down()).contienePieza() == false) {
+					addCoordenada(posicion.down(), lista);
+				}
 			}
 
 			if (tablero.contiene(posicion.diagonalDownLeft())
@@ -95,35 +103,37 @@ public class Pawn extends Pieza {
 
 	/**
 	 * Añade la coordenada a la lista de siguientes movimientos
-	 * @param c Coordenada que queremos añadir
+	 * 
+	 * @param c     Coordenada que queremos añadir
 	 * @param lista a la que vamos a añadir la coordenada
 	 */
-	
-	private void addCoordenada(Coordenada c, Lista<Coordenada> lista) {
+
+	private void addCoordenada(Coordenada c, ArrayList<Coordenada> lista) {
 		if (tablero.contiene(c)) {
 			if (tablero.getCeldaAt(c).contienePieza()) {
 				if (tablero.getPiezaAt(c).getColor() != getColor()) {
-					lista.addHead(c);
+					lista.add(c);
 				}
 			} else {
-				lista.addHead(c);
+				lista.add(c);
 			}
 		}
 	}
 
 	/**
-	 * Metodo para cambiar el peon por una reina en caso de que llegue al final del tablero
+	 * Metodo para cambiar el peon por una reina en caso de que llegue al final del
+	 * tablero
 	 */
-	
+
 	public void moveTo(Coordenada c) {
 		super.moveTo(c);
 
 		if (getColor() == Color.WHITE && posicion.getRow() == 8) {
 			tablero.eliminarPieza(this);
 			tablero.getBlancas().addHead(new Queen(Color.WHITE, c, tablero));
-		} else if (getColor() == Color.BLACK && posicion.getRow() == 8) {
+		} else if (getColor() == Color.BLACK && posicion.getRow() == 1) {
 			tablero.eliminarPieza(this);
-			tablero.getBlancas().addHead(new Queen(Color.WHITE, c, tablero));
+			tablero.getBlancas().addHead(new Queen(Color.BLACK, c, tablero));
 		}
 
 	}

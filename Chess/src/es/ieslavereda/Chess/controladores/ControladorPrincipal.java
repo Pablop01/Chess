@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
+import javax.swing.border.LineBorder;
 
 import es.ieslavereda.Chess.model.common.Celda;
 import es.ieslavereda.Chess.model.common.Color;
 import es.ieslavereda.Chess.model.common.Coordenada;
 import es.ieslavereda.Chess.model.common.Pieza;
+import es.ieslavereda.Chess.model.common.Tablero;
 import es.ieslavereda.Chess.vista.VistaPrincipal;
 
 public class ControladorPrincipal implements ActionListener {
@@ -64,27 +66,61 @@ public class ControladorPrincipal implements ActionListener {
 						JOptionPane.ERROR_MESSAGE);
 
 			} else {
+
 				p = ((Celda) arg0.getSource()).getPieza();
-				if (turn != p.getColor()) {
-					JOptionPane.showMessageDialog(null, "No es tu turno", "Error", JOptionPane.ERROR_MESSAGE);
+
+				if (p.getNextMovements().size() == 0) {
+					JOptionPane.showMessageDialog(null, "Esta pieza no se puede mover", "Error",
+							JOptionPane.ERROR_MESSAGE);
 					p = null;
+				}
+
+				try {
+
+					if (turn != p.getColor()) {
+						JOptionPane.showMessageDialog(null, "No es tu turno", "Error", JOptionPane.ERROR_MESSAGE);
+						p = null;
+					} else {
+
+						for (Coordenada c2 : p.getNextMovements()) {
+
+							Celda ce = vista.getTablero().get(c2);
+
+							ce.setBorder(new LineBorder(java.awt.Color.YELLOW));
+
+							if (ce.contienePieza()) {
+								if (ce.getPieza().getColor() != turn) {
+									ce.setBorder(new LineBorder(java.awt.Color.RED));
+								}
+							}
+
+						}
+
+					}
+				} catch (Exception e) {
 				}
 			}
 
 		} else {
-			
+
 			Coordenada c = ((Celda) arg0.getSource()).getCoordenada();
-			
-			for(int i=0; i < p.getNextMovements().getSize(); i++) {
-				
-				
+
+			if (p.canMoveTo(c)) {
+
+				for (Coordenada c2 : p.getNextMovements()) {
+
+					vista.getTablero().get(c2).setBorder(null);
+
+				}
+
+				p.moveTo(c);
+				p = null;
+				turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
+			} else {
+				JOptionPane.showMessageDialog(null, "No puedes moverte a esta celda", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
-			
-			p.moveTo(c);
-			p = null;
-			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
-		
-			
+
 		}
 
 	}

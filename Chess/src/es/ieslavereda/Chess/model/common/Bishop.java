@@ -1,5 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author ppereaf
@@ -32,7 +34,7 @@ public class Bishop extends Pieza {
 	 */
 	
 	@Override
-	public Lista<Coordenada> getNextMovements() {
+	public ArrayList<Coordenada> getNextMovements() {
 		// TODO Auto-generated method stub
 		return getNextMovements(this);
 	}
@@ -43,47 +45,47 @@ public class Bishop extends Pieza {
 	 * @return Lista de coordenadas
 	 */
 	
-	public static Lista<Coordenada> getNextMovements(Pieza p) {
+	public static ArrayList<Coordenada> getNextMovements(Pieza p) {
 
 		Tablero t = p.tablero;
-		Lista<Coordenada> lista = new Lista<>();
+		ArrayList<Coordenada> lista = new ArrayList<>();
 		Coordenada c;
 
 		// UP Right
 		c = p.posicion.diagonalUpRight();
 		while (t.contiene(c) && t.getPiezaAt(c) == null) {
-			lista.addHead(c);
+			lista.add(c);
 			c = c.diagonalUpRight();
 		}
 		if (t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor())
-			lista.addHead(c);
+			lista.add(c);
 
 		// UP Left
 		c = p.posicion.diagonalUpLeft();
 		while (t.contiene(c) && t.getPiezaAt(c) == null) {
-			lista.addHead(c);
+			lista.add(c);
 			c = c.diagonalUpLeft();
 		}
 		if (t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor())
-			lista.addHead(c);
+			lista.add(c);
 
 		// Down Right
 		c = p.posicion.diagonalDownRight();
 		while (t.contiene(c) && t.getPiezaAt(c) == null) {
-			lista.addHead(c);
+			lista.add(c);
 			c = c.diagonalDownRight();
 		}
 		if (t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor())
-			lista.addHead(c);
+			lista.add(c);
 
 		// Down Left
 		c = p.posicion.diagonalDownLeft();
 		while (t.contiene(c) && t.getPiezaAt(c) == null) {
-			lista.addHead(c);
+			lista.add(c);
 			c = c.diagonalDownLeft();
 		}
 		if (t.contiene(c) && t.getPiezaAt(c).getColor() != p.getColor())
-			lista.addHead(c);
+			lista.add(c);
 
 		return lista;
 	}
