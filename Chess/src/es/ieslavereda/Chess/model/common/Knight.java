@@ -23,6 +23,8 @@ public class Knight extends Pieza {
 		else
 			tipo = Tipo.BLACK_KNIGHT;
 
+		colocate(posicion);
+		
 	}
 
 	/**

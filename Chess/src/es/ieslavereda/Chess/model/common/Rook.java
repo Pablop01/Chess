@@ -24,6 +24,8 @@ public class Rook extends Pieza {
 		else
 			tipo = Tipo.BLACK_ROOK;
 		
+		colocate(posicion);
+		
 	}
 
 	/**

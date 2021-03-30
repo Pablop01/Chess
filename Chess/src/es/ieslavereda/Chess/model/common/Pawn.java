@@ -23,6 +23,8 @@ public class Pawn extends Pieza {
 		else
 			tipo = Tipo.BLACK_PAWN;
 
+		colocate(posicion);
+		
 	}
 
 	/**

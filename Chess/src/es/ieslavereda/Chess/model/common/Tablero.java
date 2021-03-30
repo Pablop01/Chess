@@ -1,14 +1,24 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.HashMap;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import java.awt.Rectangle;
+import java.awt.Component;
+import java.awt.GridLayout;
+
 /**
  * 
  * @author ppereaf
  *
  */
 
-public class Tablero {
+public class Tablero extends JPanel{
 
-	private Celda[][] tablero;
+	private HashMap<Coordenada,Celda> tablero;
 	private Lista<Pieza> blancas;
 	private Lista<Pieza> blancasEliminadas;
 	private Lista<Pieza> negras;
@@ -22,7 +32,9 @@ public class Tablero {
 	
 	public Tablero() {
 		super();
-		tablero = new Celda[8][8];
+		setBounds(new Rectangle(0, 0, 500, 500));
+		setLayout(new GridLayout(10, 10, 0, 0));
+		tablero = new HashMap<Coordenada, Celda>();
 		blancas = new Lista<>();
 		blancasEliminadas = new Lista<>();
 		negras = new Lista<>();
@@ -37,9 +49,10 @@ public class Tablero {
 	private void inicializar() {
 
 		// Inicializamos el tablero
-		for (int fila = 0; fila < tablero.length; fila++) {
-			for (int col = 0; col < tablero[0].length; col++)
-				tablero[fila][col] = new Celda();
+		for (int fila = 0; fila < 8; fila++) {
+			for (int col = 0; col < 8; col++)
+				tablero.put(new Coordenada((char)('A'+col),1+fila), new Celda(new Coordenada((char)('A'+col),1+fila)));
+				
 		}
 
 		whiteKing = new King(Color.WHITE, new Coordenada('E', 1), this);
@@ -64,12 +77,53 @@ public class Tablero {
 		negras.addHead(new Knight(Color.BLACK, new Coordenada('G', 8), this));
 		negras.addHead(new Rook(Color.BLACK, new Coordenada('H', 8), this));
 		
-		for (int i = 0; i < tablero.length; i++) {
+		for (int i = 0; i < 8; i++) {
 			blancas.addHead(new Pawn(Color.WHITE, new Coordenada((char) ('A' + i), 2), this));
 			negras.addHead(new Pawn(Color.BLACK, new Coordenada((char) ('A' + i), 7), this));
 		}
 
+		addToPanel();
+		
 	}
+
+	private void addToPanel() {
+		
+		Color colorCelda;
+		int numero;
+		
+		add(getNewLabel(""));
+		for(int i = 0;i<8;i++)
+		    add(getNewLabel(String.valueOf((char)('A'+i))));
+		add(getNewLabel(""));
+		
+		for (int i = 8; i > 0; i--) {
+			this.add(getNewLabel(String.valueOf(i)));
+			for(int j = 0; j< 8; j++) {
+				
+				numero = i+j;
+				
+				if(esPar(numero)) {
+					colorCelda = Color.WHITE;
+				}else {
+					colorCelda = Color.BLACK;
+				}
+				
+				this.add((tablero.get(new Coordenada((char)('A'+j),i))));
+				tablero.get(new Coordenada((char)('A'+j),i)).setCellBackground(colorCelda);
+				
+				
+			}
+			this.add(getNewLabel(String.valueOf(i)));
+		}
+		
+		
+		add(getNewLabel(""));
+		for(int i = 0;i<8;i++)
+		    add(getNewLabel(String.valueOf((char)('A'+i))));
+		add(getNewLabel(""));
+		
+	}
+	
 
 	/**
 	 * Comprueba que la coordenada pasa por parametro esta en el tablero
@@ -134,135 +188,7 @@ public class Tablero {
 	
 	public Celda getCeldaAt(Coordenada c) {
 
-		if (contiene(c))
-			return tablero[8 - c.getRow()][c.getColumn() - 'A'];
-
-		return null;
-	}
-
-	/**
-	 * Metodo para pintar el tablero dependiendo del color que elijamos
-	 * @param color Color que le pasamos por parametro
-	 * @return devuelve el tablero 
-	 */
-	
-	public String print(Color color) {
-
-		switch (color) {
-		case WHITE:
-			return printAsWhite();
-		default:
-			return printAsBlack();
-		}
-	}
-
-	/**
-	 * Metodo para pintar el tablero en el caso de que juguemos con negras
-	 * @return tablero negras
-	 */
-	
-	private String printAsBlack() {
-		String salida = "           H   G   F   E   D   C   B   A\n";
-
-		salida += obtenerParteSuperior();
-
-		for (int fila = tablero.length - 1; fila > 0; fila--) {
-			salida += obtenerParteFichaNegra(fila);
-			salida += obtenerParteDivisoria();
-		}
-		salida += obtenerParteFichaNegra(0);
-		salida += obtenerParteInferior() + "\n";
-		salida += "           H   G   F   E   D   C   B   A\n";
-
-		return salida;
-	}
-
-	/**
-	 * Metodo para pintar el tablero en el caso de que juguemos con blancas
-	 * @return tablero blancas
-	 */
-	
-	private String printAsWhite() {
-		String salida = "           A   B   C   D   E   F   G   H\n";
-
-		salida += obtenerParteSuperior();
-
-		for (int fila = 0; fila < tablero.length - 1; fila++) {
-			salida += obtenerParteFichaBlanca(fila);
-			salida += obtenerParteDivisoria();
-		}
-		salida += obtenerParteFichaBlanca(tablero.length - 1);
-		salida += obtenerParteInferior() + "\n";
-		salida += "           A   B   C   D   E   F   G   H\n";
-		return salida;
-	}
-
-	/**
-	 * Obtener la parte superior del tablero
-	 * @return parte superior tablero
-	 */
-	
-	private String obtenerParteSuperior() {
-
-		return "         ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗\n";
-	}
-	
-	/**
-	 * Obtener las partes intermedias del tablero 
-	 * @param fila indica que el numero de fila del tablero
-	 * @return devuelve parte del tablero
-	 */
-
-	private String obtenerParteFichaNegra(int fila) {
-		// String I = "\u2502";
-		String salida = "       " + (8 - fila) + " ║";
-
-		for (int col = tablero[0].length - 1; col > 0; col--) {
-			salida = salida + " " + tablero[fila][col] + " │";
-		}
-
-		salida = salida + " " + tablero[fila][0] + " ║ " + (8 - fila) + "\n";
-
-		return salida;
-	}
-
-	/**
-	 * Obtener las partes intermedias del tablero 
-	 * @param fila indica que el numero de fila del tablero
-	 * @return devuelve parte del tablero
-	 */
-	
-	private String obtenerParteFichaBlanca(int fila) {
-		// String I = "\u2502";
-		String salida = "       " + (8 - fila) + " ║";
-
-		for (int col = 0; col < tablero[0].length - 1; col++) {
-			salida = salida + " " + tablero[fila][col] + " │";
-		}
-
-		salida = salida + " " + tablero[fila][tablero[0].length - 1] + " ║ " + (8 - fila) + "\n";
-
-		return salida;
-	}
-
-	/**
-	 * Obtener las partes que separan una celda de otra
-	 * @return parte del tablero
-	 */
-	
-	private String obtenerParteDivisoria() {
-
-		return "         ╟───┼───┼───┼───┼───┼───┼───┼───╢ \n";
-	}
-
-	/**
-	 * Obtener la parte inferior del tablero
-	 * @return parte inferior tablero
-	 */
-	
-	private String obtenerParteInferior() {
-
-		return "         ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝\n";
+		return tablero.get(c);
 	}
 
 	/**
@@ -300,6 +226,28 @@ public class Tablero {
 	
 	public Coordenada whiteKingCoordenada() {
 		return whiteKing.posicion;
+	}
+	
+	private JLabel getNewLabel(String text) {
+	    JLabel label = new JLabel(text);
+	    label.setOpaque(true);    
+	    label.setHorizontalAlignment(SwingConstants.CENTER);
+	    label.setBackground(java.awt.Color.DARK_GRAY);
+	    label.setForeground(java.awt.Color.WHITE);
+	    return label;
+	}
+	
+	private boolean esPar(int n) {
+		
+		if(n%2==0) {
+			return true;
+		}
+		
+		return false;	
+	}
+
+	public HashMap<Coordenada, Celda> getTablero() {
+		return tablero;
 	}
 
 }

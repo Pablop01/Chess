@@ -22,6 +22,8 @@ public class Bishop extends Pieza {
 			tipo = Tipo.WHITE_BISHOP;
 		else
 			tipo = Tipo.BLACK_BISHOP;
+		
+		colocate(posicion);
 	}
 
 	/**

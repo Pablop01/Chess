@@ -1,5 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.awt.Component;
+
 /**
  * 
  * @author ppereaf
@@ -22,7 +24,7 @@ public abstract class Pieza {
 		super();
 		this.posicion = posicion;
 		this.tablero = tablero;
-		colocate(posicion);
+		
 	}
 	
 	/**
@@ -30,7 +32,7 @@ public abstract class Pieza {
 	 * @param c Coordenada obtenida por parametro
 	 */
 	
-	private void colocate(Coordenada c) {
+	protected void colocate(Coordenada c) {
 		
 		tablero.getCeldaAt(posicion).setPieza(null);
 		posicion = c;
@@ -77,20 +79,20 @@ public abstract class Pieza {
 	 * @return tipo
 	 */
 	
-	public Tipo getTipo() {
-		return this.tipo;
+	public String getFileName() {
+		return tipo.getFilename();
 	}
 	
 	@Override
 	public String toString() {
-		return tipo.getForma();
+		return tipo.getFilename();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Pieza) {
 			Pieza p = (Pieza)obj;
-			if(this.getTipo() == p.getTipo()) {
+			if(this.getFileName() == p.getFileName()) {
 				return true;
 			}
 		}
@@ -98,6 +100,7 @@ public abstract class Pieza {
 	}
 	
 	public abstract Lista<Coordenada> getNextMovements();
+	
 }
 
 

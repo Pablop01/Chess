@@ -21,6 +21,9 @@ public class King extends Pieza {
 			tipo = Tipo.WHITE_KING;
 		else
 			tipo = Tipo.BLACK_KING;
+		
+		colocate(posicion);
+		
 	}
 
 	/**

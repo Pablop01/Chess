@@ -22,6 +22,9 @@ public class Queen extends Pieza{
 			tipo = Tipo.WHITE_QUEEN;
 		else
 			tipo = Tipo.BLACK_QUEEN;
+		
+		colocate(posicion);
+		
 	}
 
 	/**
