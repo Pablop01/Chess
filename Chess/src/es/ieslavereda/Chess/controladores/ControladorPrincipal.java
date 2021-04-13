@@ -4,14 +4,17 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 
+import es.ieslavereda.Chess.config.MyConfig;
 import es.ieslavereda.Chess.model.common.Celda;
 import es.ieslavereda.Chess.model.common.Color;
 import es.ieslavereda.Chess.model.common.Coordenada;
 import es.ieslavereda.Chess.model.common.Pieza;
 import es.ieslavereda.Chess.model.common.Tablero;
+import es.ieslavereda.Chess.vista.Preferencias;
 import es.ieslavereda.Chess.vista.VistaPrincipal;
 
 public class ControladorPrincipal implements ActionListener {
@@ -19,6 +22,7 @@ public class ControladorPrincipal implements ActionListener {
 	private VistaPrincipal vista;
 	private Pieza p = null;
 	private Color turn = Color.WHITE;
+	private Preferencias jfPreferencias;
 
 	public ControladorPrincipal(VistaPrincipal vista) {
 		super();
@@ -37,6 +41,12 @@ public class ControladorPrincipal implements ActionListener {
 			}
 		}
 
+		// Añadir ActionListener
+		vista.getMntmPreferences().addActionListener(this);
+
+		// Añadir ActionCommand
+		vista.getMntmPreferences().setActionCommand("Abrir preferencias");
+
 	}
 
 	public void go() {
@@ -48,12 +58,60 @@ public class ControladorPrincipal implements ActionListener {
 
 		String comando = arg0.getActionCommand();
 
-		if (comando.equals("qwer")) {
-
+		if (comando.equals("Abrir preferencias")) {
+			abrirPreferencias();
 		} else if (arg0.getSource() instanceof Celda) {
 
 			mecanica(arg0);
+		} else if (comando.equals("Cambiar Color Celda Blanca")) {
+			cambiarColorCeldaBlanca();
+		} else if (comando.equals("Cambiar Color Celda Negra")) {
+			cambiarColorCeldaNegra();
 		}
+
+	}
+
+	private void cambiarColorCeldaNegra() {
+		
+		java.awt.Color color = JColorChooser.showDialog(jfPreferencias.getBtnColorCeldaNegra(),
+				"Selecciona color de las celdas negras", jfPreferencias.getBtnColorCeldaNegra().getBackground());
+
+		if(color!=null) {
+			jfPreferencias.getBtnColorCeldaNegra().setBackground(color);
+			MyConfig.getInstance().setBlackCellColor(color);
+		}
+		
+	}
+
+	private void cambiarColorCeldaBlanca() {
+
+		java.awt.Color color = JColorChooser.showDialog(jfPreferencias.getBtnColorCeldaBlanca(),
+				"Selecciona color de las celdas blancas", jfPreferencias.getBtnColorCeldaBlanca().getBackground());
+
+		if(color!=null) {
+			jfPreferencias.getBtnColorCeldaBlanca().setBackground(color);
+			MyConfig.getInstance().setWhiteCellColor(color);
+		}
+		
+	}
+
+	private void abrirPreferencias() {
+
+		jfPreferencias = new Preferencias();
+
+		jfPreferencias.setVisible(true);
+
+		// Añadir ActionListener
+		jfPreferencias.getBtnColorCeldaBlanca().addActionListener(this);
+		jfPreferencias.getBtnColorCeldaNegra().addActionListener(this);
+		jfPreferencias.getBtnColorBordeCelda().addActionListener(this);
+		jfPreferencias.getBtnColorBordeCeldaComer().addActionListener(this);
+
+		// Añadir ActionCommand
+		jfPreferencias.getBtnColorCeldaBlanca().setActionCommand("Cambiar Color Celda Blanca");
+		jfPreferencias.getBtnColorCeldaNegra().setActionCommand("Cambiar Color Celda Negra");
+		jfPreferencias.getBtnColorBordeCelda().setActionCommand("Cambiar Color Borde Celda");
+		jfPreferencias.getBtnColorBordeCeldaComer().setActionCommand("Cambiar Color Borde Celda Comer");
 
 	}
 
@@ -86,11 +144,13 @@ public class ControladorPrincipal implements ActionListener {
 
 							Celda ce = vista.getTablero().get(c2);
 
-							ce.setBorder(new LineBorder(java.awt.Color.YELLOW));
+							ce.setBorder(
+									new LineBorder(new java.awt.Color(MyConfig.getInstance().getYellowBorderColor())));
 
 							if (ce.contienePieza()) {
 								if (ce.getPieza().getColor() != turn) {
-									ce.setBorder(new LineBorder(java.awt.Color.RED));
+									ce.setBorder(new LineBorder(
+											new java.awt.Color(MyConfig.getInstance().getRedBorderColor())));
 								}
 							}
 

@@ -11,6 +11,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
+import es.ieslavereda.Chess.config.MyConfig;
+
 /**
  * 
  * @author ppereaf
@@ -22,8 +24,8 @@ public class Celda extends JButton implements Serializable{
 	private Pieza pieza;
 	private Dimension dimension = new Dimension(50,50);
 	private Coordenada c;
-	private java.awt.Color colorCeldaNegra = new java.awt.Color(210,129,64);
-	private java.awt.Color colorCeldaBlanca = new java.awt.Color(230,205,174);
+	private java.awt.Color colorCeldaNegra = new java.awt.Color(MyConfig.getInstance().getBlackCellColor());
+	private java.awt.Color colorCeldaBlanca = new java.awt.Color(MyConfig.getInstance().getWhiteCellColor());
 
 	/**
 	 * Constructor de celda
@@ -34,6 +36,7 @@ public class Celda extends JButton implements Serializable{
 		pieza = null;
 		setPreferredSize(dimension);
 		this.c = c;
+	
 	}
 
 	/**

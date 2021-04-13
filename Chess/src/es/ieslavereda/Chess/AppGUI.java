@@ -2,6 +2,7 @@ package es.ieslavereda.Chess;
 
 import java.awt.EventQueue;
 
+import es.ieslavereda.Chess.config.MyConfig;
 import es.ieslavereda.Chess.controladores.ControladorPrincipal;
 import es.ieslavereda.Chess.vista.VistaPrincipal;
 
@@ -13,6 +14,7 @@ public class AppGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					MyConfig.getInstance();
 					//Creamos la vista
 					VistaPrincipal frame = new VistaPrincipal();
 					

@@ -34,6 +34,7 @@ public class VistaPrincipal extends JFrame {
 	private JPanel panelMovimientos;
 	private JPanel panelEliminados;
 	private Tablero t;
+	private JMenuItem mntmPreferences;
 
 
 	/**
@@ -66,6 +67,12 @@ public class VistaPrincipal extends JFrame {
 			}
 		});
 		mnFile.add(mntmExit);
+		
+		JMenu mnEdit = new JMenu("Edit");
+		menuBar.add(mnEdit);
+		
+		mntmPreferences = new JMenuItem("Preferences");
+		mnEdit.add(mntmPreferences);
 		
 		JMenu mnAbout = new JMenu("Help");
 		menuBar.add(mnAbout);
@@ -125,5 +132,12 @@ public class VistaPrincipal extends JFrame {
 	public HashMap<Coordenada, Celda> getTablero() {
 		return t.getTablero();
 	}
+
+
+	public JMenuItem getMntmPreferences() {
+		return mntmPreferences;
+	}
+	
+	
 	
 }
