@@ -66,8 +66,18 @@ public class MyConfig {
 		return Integer.parseInt(properties.getProperty("color_borde_celda_movimiento"));
 	}
 	
+	public void setBorderColor(Color color) {
+		properties.setProperty("color_borde_celda_movimiento", String.valueOf(color.getRGB()));
+		guardar();
+	}
+	
 	public int getRedBorderColor() {
 		return Integer.parseInt(properties.getProperty("color_borde_celda_matar"));
+	}
+	
+	public void setBorderColorComer(Color color) {
+		properties.setProperty("color_borde_celda_matar", String.valueOf(color.getRGB()));
+		guardar();
 	}
 	
 	public void guardar() {

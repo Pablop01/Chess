@@ -33,8 +33,8 @@ public class VistaPrincipal extends JFrame {
 	private JPanel panelTurnos;
 	private JPanel panelMovimientos;
 	private JPanel panelEliminados;
-	private Tablero t;
 	private JMenuItem mntmPreferences;
+	private JMenuItem mntmNewGame;
 
 
 	/**
@@ -50,6 +50,12 @@ public class VistaPrincipal extends JFrame {
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
+		
+		mntmNewGame = new JMenuItem("New Game");
+		mnFile.add(mntmNewGame);
+		
+		JSeparator separator_1 = new JSeparator();
+		mnFile.add(separator_1);
 		
 		JMenuItem mntmOpen = new JMenuItem("Open");
 		mnFile.add(mntmOpen);
@@ -83,8 +89,8 @@ public class VistaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		t = new Tablero();
-		panelTablero = t;
+	
+		panelTablero = new Tablero();
 		panelTablero.setBounds(new Rectangle(0, 0, 500, 500));
 		
 		panelEliminados = new JPanel();
@@ -130,12 +136,20 @@ public class VistaPrincipal extends JFrame {
 	}
 	
 	public HashMap<Coordenada, Celda> getTablero() {
-		return t.getTablero();
+		return ((Tablero)panelTablero).getTablero();
 	}
 
 
 	public JMenuItem getMntmPreferences() {
 		return mntmPreferences;
+	}
+
+
+
+
+
+	public JMenuItem getMntmNewGame() {
+		return mntmNewGame;
 	}
 	
 	

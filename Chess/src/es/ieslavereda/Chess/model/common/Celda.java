@@ -24,8 +24,8 @@ public class Celda extends JButton implements Serializable{
 	private Pieza pieza;
 	private Dimension dimension = new Dimension(50,50);
 	private Coordenada c;
-	private java.awt.Color colorCeldaNegra = new java.awt.Color(MyConfig.getInstance().getBlackCellColor());
-	private java.awt.Color colorCeldaBlanca = new java.awt.Color(MyConfig.getInstance().getWhiteCellColor());
+	public static java.awt.Color colorCeldaNegra = new java.awt.Color(MyConfig.getInstance().getBlackCellColor());
+	public static java.awt.Color colorCeldaBlanca = new java.awt.Color(MyConfig.getInstance().getWhiteCellColor());
 
 	/**
 	 * Constructor de celda
@@ -98,11 +98,6 @@ public class Celda extends JButton implements Serializable{
 		}	
 	}
 	
-	public void resaltar(java.awt.Color color, int size) { 
-		
-		setBorder(new LineBorder(color,size));
-		
-	}
 
 	
 	@Override

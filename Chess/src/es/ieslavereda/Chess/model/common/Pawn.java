@@ -130,10 +130,10 @@ public class Pawn extends Pieza {
 
 		if (getColor() == Color.WHITE && posicion.getRow() == 8) {
 			tablero.eliminarPieza(this);
-			tablero.getBlancas().addHead(new Queen(Color.WHITE, c, tablero));
+			tablero.getBlancas().add(new Queen(Color.WHITE, c, tablero));
 		} else if (getColor() == Color.BLACK && posicion.getRow() == 1) {
 			tablero.eliminarPieza(this);
-			tablero.getBlancas().addHead(new Queen(Color.BLACK, c, tablero));
+			tablero.getBlancas().add(new Queen(Color.BLACK, c, tablero));
 		}
 
 	}

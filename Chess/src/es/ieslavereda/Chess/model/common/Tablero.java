@@ -1,5 +1,6 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JLabel;
@@ -19,10 +20,10 @@ import java.awt.GridLayout;
 public class Tablero extends JPanel{
 
 	private HashMap<Coordenada,Celda> tablero;
-	private Lista<Pieza> blancas;
-	private Lista<Pieza> blancasEliminadas;
-	private Lista<Pieza> negras;
-	private Lista<Pieza> negrasEliminadas;
+	private ArrayList<Pieza> blancas;
+	private ArrayList<Pieza> blancasEliminadas;
+	private ArrayList<Pieza> negras;
+	private ArrayList<Pieza> negrasEliminadas;
 	private Pieza blackKing;
 	private Pieza whiteKing;
 
@@ -35,54 +36,78 @@ public class Tablero extends JPanel{
 		setBounds(new Rectangle(0, 0, 500, 500));
 		setLayout(new GridLayout(10, 10, 0, 0));
 		tablero = new HashMap<Coordenada, Celda>();
-		blancas = new Lista<>();
-		blancasEliminadas = new Lista<>();
-		negras = new Lista<>();
-		negrasEliminadas = new Lista<>();
-		inicializar();
-	}
-
-	/**
-	 * Inicializa el tablero con las piezas colocadas
-	 */
-	
-	private void inicializar() {
-
+		blancas = new ArrayList<>();
+		blancasEliminadas = new ArrayList<>();
+		negras = new ArrayList<>();
+		negrasEliminadas = new ArrayList<>();
+		
 		// Inicializamos el tablero
 		for (int fila = 0; fila < 8; fila++) {
 			for (int col = 0; col < 8; col++)
 				tablero.put(new Coordenada((char)('A'+col),1+fila), new Celda(new Coordenada((char)('A'+col),1+fila)));
 				
 		}
+		
+		inicializar();
+		addToPanel();
+	}
+
+	/**
+	 * Inicializa el tablero con las piezas colocadas
+	 */
+	
+	public void inicializar() {
+
+
 
 		whiteKing = new King(Color.WHITE, new Coordenada('E', 1), this);
-		blancas.addHead(whiteKing);
+		blancas.add(whiteKing);
 
-		blancas.addHead(new Rook(Color.WHITE, new Coordenada('A', 1), this));
-		blancas.addHead(new Knight(Color.WHITE, new Coordenada('B', 1), this));
-		blancas.addHead(new Bishop(Color.WHITE, new Coordenada('C', 1), this));
-		blancas.addHead(new Queen(Color.WHITE, new Coordenada('D', 1), this));
-		blancas.addHead(new Bishop(Color.WHITE, new Coordenada('F', 1), this));
-		blancas.addHead(new Knight(Color.WHITE, new Coordenada('G', 1), this));
-		blancas.addHead(new Rook(Color.WHITE, new Coordenada('H', 1), this));
+		blancas.add(new Rook(Color.WHITE, new Coordenada('A', 1), this));
+		blancas.add(new Knight(Color.WHITE, new Coordenada('B', 1), this));
+		blancas.add(new Bishop(Color.WHITE, new Coordenada('C', 1), this));
+		blancas.add(new Queen(Color.WHITE, new Coordenada('D', 1), this));
+		blancas.add(new Bishop(Color.WHITE, new Coordenada('F', 1), this));
+		blancas.add(new Knight(Color.WHITE, new Coordenada('G', 1), this));
+		blancas.add(new Rook(Color.WHITE, new Coordenada('H', 1), this));
 
 		blackKing = new King(Color.BLACK, new Coordenada('E', 8), this);
-		negras.addHead(blackKing);
+		negras.add(blackKing);
 		
-		negras.addHead(new Rook(Color.BLACK, new Coordenada('A', 8), this));
-		negras.addHead(new Knight(Color.BLACK, new Coordenada('B', 8), this));
-		negras.addHead(new Bishop(Color.BLACK, new Coordenada('C', 8), this));
-		negras.addHead(new Queen(Color.BLACK, new Coordenada('D', 8), this));
-		negras.addHead(new Bishop(Color.BLACK, new Coordenada('F', 8), this));
-		negras.addHead(new Knight(Color.BLACK, new Coordenada('G', 8), this));
-		negras.addHead(new Rook(Color.BLACK, new Coordenada('H', 8), this));
+		negras.add(new Rook(Color.BLACK, new Coordenada('A', 8), this));
+		negras.add(new Knight(Color.BLACK, new Coordenada('B', 8), this));
+		negras.add(new Bishop(Color.BLACK, new Coordenada('C', 8), this));
+		negras.add(new Queen(Color.BLACK, new Coordenada('D', 8), this));
+		negras.add(new Bishop(Color.BLACK, new Coordenada('F', 8), this));
+		negras.add(new Knight(Color.BLACK, new Coordenada('G', 8), this));
+		negras.add(new Rook(Color.BLACK, new Coordenada('H', 8), this));
 		
 		for (int i = 0; i < 8; i++) {
-			blancas.addHead(new Pawn(Color.WHITE, new Coordenada((char) ('A' + i), 2), this));
-			negras.addHead(new Pawn(Color.BLACK, new Coordenada((char) ('A' + i), 7), this));
+			blancas.add(new Pawn(Color.WHITE, new Coordenada((char) ('A' + i), 2), this));
+			negras.add(new Pawn(Color.BLACK, new Coordenada((char) ('A' + i), 7), this));
 		}
 
-		addToPanel();
+		
+		
+	}
+	
+	public void reiniciar() {
+		
+		
+		blancas = new ArrayList<>();
+		blancasEliminadas = new ArrayList<>();
+		negras = new ArrayList<>();
+		negrasEliminadas = new ArrayList<>();
+		
+		
+		for(Component c : this.getComponents()) {
+			if(c instanceof Celda) {
+				((Celda) c).setPieza(null);
+				c.setEnabled(true);
+			}
+		}
+		
+		inicializar();
 		
 	}
 
@@ -124,6 +149,29 @@ public class Tablero extends JPanel{
 		
 	}
 	
+	public void repaintBoard() {
+		
+		Color colorCelda;
+		int numero;
+		
+		for (int i = 8; i > 0; i--) {
+			this.add(getNewLabel(String.valueOf(i)));
+			for(int j = 0; j< 8; j++) {
+				
+				numero = i+j;
+				
+				if(esPar(numero)) {
+					colorCelda = Color.WHITE;
+				}else {
+					colorCelda = Color.BLACK;
+				}
+				tablero.get(new Coordenada((char)('A'+j),i)).setCellBackground(colorCelda);	
+			}
+
+		}
+		
+	}
+	
 
 	/**
 	 * Comprueba que la coordenada pasa por parametro esta en el tablero
@@ -153,7 +201,7 @@ public class Tablero extends JPanel{
 	 * @return Lista de piezas
 	 */
 	
-	public Lista<Pieza> getBlancas() {
+	public ArrayList<Pieza> getBlancas() {
 		return blancas;
 	}
 	
@@ -162,7 +210,7 @@ public class Tablero extends JPanel{
 	 * @return Lista de piezas
 	 */
 	
-	public Lista<Pieza> getNegras() {
+	public ArrayList<Pieza> getNegras() {
 		return negras;
 	}
 
@@ -174,9 +222,9 @@ public class Tablero extends JPanel{
 	public void eliminarPieza(Pieza p) {
 
 		if (p.getColor() == Color.WHITE) {
-			blancasEliminadas.addHead(blancas.getAndRemove(p));
+			blancasEliminadas.add(blancas.remove(blancas.indexOf(p)));
 		} else
-			negrasEliminadas.addHead(negras.getAndRemove(p));
+			negrasEliminadas.add(negras.remove(negras.indexOf(p)));
 
 	}
 
