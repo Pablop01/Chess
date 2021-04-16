@@ -99,7 +99,6 @@ public class Tablero extends JPanel{
 		negras = new ArrayList<>();
 		negrasEliminadas = new ArrayList<>();
 		
-		
 		for(Component c : this.getComponents()) {
 			if(c instanceof Celda) {
 				((Celda) c).setPieza(null);

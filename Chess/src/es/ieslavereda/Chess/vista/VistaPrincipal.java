@@ -32,7 +32,7 @@ public class VistaPrincipal extends JFrame {
 	private JPanel panelTablero;
 	private JPanel panelTurnos;
 	private JPanel panelMovimientos;
-	private JPanel panelEliminados;
+	private JPFichasEliminadas panelEliminados;
 	private JMenuItem mntmPreferences;
 	private JMenuItem mntmNewGame;
 
@@ -93,7 +93,7 @@ public class VistaPrincipal extends JFrame {
 		panelTablero = new Tablero();
 		panelTablero.setBounds(new Rectangle(0, 0, 500, 500));
 		
-		panelEliminados = new JPanel();
+		panelEliminados = new JPFichasEliminadas();
 		
 		panelTurnos = new JPanel();
 		
@@ -145,13 +145,19 @@ public class VistaPrincipal extends JFrame {
 	}
 
 
-
+	public JPFichasEliminadas getPanelEliminados() {
+		return panelEliminados;
+	}
 
 
 	public JMenuItem getMntmNewGame() {
 		return mntmNewGame;
 	}
-	
+
+
+	public void setPanelEliminados(JPFichasEliminadas panelEliminados) {
+		this.panelEliminados = panelEliminados;
+	}
 	
 	
 }

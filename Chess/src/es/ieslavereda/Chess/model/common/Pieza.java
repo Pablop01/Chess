@@ -89,17 +89,6 @@ public abstract class Pieza {
 		return tipo.getFilename();
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof Pieza) {
-			Pieza p = (Pieza)obj;
-			if(this.getFileName() == p.getFileName()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public abstract ArrayList<Coordenada> getNextMovements();
 	
 }

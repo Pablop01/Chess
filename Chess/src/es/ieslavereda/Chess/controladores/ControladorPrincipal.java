@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
@@ -13,8 +14,10 @@ import es.ieslavereda.Chess.config.MyConfig;
 import es.ieslavereda.Chess.model.common.Celda;
 import es.ieslavereda.Chess.model.common.Color;
 import es.ieslavereda.Chess.model.common.Coordenada;
+import es.ieslavereda.Chess.model.common.GestionFichasEliminadas;
 import es.ieslavereda.Chess.model.common.Pieza;
 import es.ieslavereda.Chess.model.common.Tablero;
+import es.ieslavereda.Chess.vista.JPFichasEliminadas;
 import es.ieslavereda.Chess.vista.Preferencias;
 import es.ieslavereda.Chess.vista.VistaPrincipal;
 
@@ -24,6 +27,7 @@ public class ControladorPrincipal implements ActionListener {
 	private Pieza p = null;
 	private Color turn = Color.WHITE;
 	private Preferencias jfPreferencias;
+	private GestionFichasEliminadas gestionFichasEliminadas;
 
 	public ControladorPrincipal(VistaPrincipal vista) {
 		super();
@@ -34,6 +38,8 @@ public class ControladorPrincipal implements ActionListener {
 
 	private void inicializar() {
 
+		gestionFichasEliminadas = new ControladorFichasEliminadas(vista.getPanelEliminados());
+		
 		Component[] components = vista.getPanelTablero().getComponents();
 
 		for (Component c : components) {
@@ -80,9 +86,9 @@ public class ControladorPrincipal implements ActionListener {
 	}
 
 	private void newGame() {
-		
-		((Tablero)vista.getPanelTablero()).reiniciar();
-		
+
+		((Tablero) vista.getPanelTablero()).reiniciar();	
+
 	}
 
 	private void cambiarColorBordeCeldaComer() {
@@ -173,7 +179,7 @@ public class ControladorPrincipal implements ActionListener {
 	}
 
 	private void comprobarSeleccion(ActionEvent arg0) {
-		
+
 		if (((Celda) arg0.getSource()).getPieza() == null) {
 			JOptionPane.showMessageDialog(null, "No hay ninguna pieza en esta Celda", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -220,8 +226,11 @@ public class ControladorPrincipal implements ActionListener {
 	}
 
 	private void moverPieza(ActionEvent arg0) {
+		
 		Coordenada c = ((Celda) arg0.getSource()).getCoordenada();
-
+		Tablero tablero = ((Tablero) vista.getPanelTablero());
+		Celda ce = tablero.getCeldaAt(c);
+		
 		if (p.canMoveTo(c)) {
 
 			for (Coordenada c2 : p.getNextMovements()) {
@@ -230,39 +239,77 @@ public class ControladorPrincipal implements ActionListener {
 
 			}
 
+			if(ce.contienePieza()) {
+				gestionFichasEliminadas.addPiece(ce.getPieza());
+			}
+			
 			p.moveTo(c);
 			p = null;
-			
-			Tablero tablero = ((Tablero)vista.getPanelTablero());
-			
-			if(!tablero.blackKingIsAlive()) {
+
+			if (!tablero.blackKingIsAlive()) {
 				JOptionPane.showMessageDialog(null, "Ganan las blancas!", "Ganador", JOptionPane.INFORMATION_MESSAGE);
 				desactivarCeldas();
 			}
-			
-			if(!tablero.whiteKingIsAlive()) {
+
+			if (!tablero.whiteKingIsAlive()) {
 				JOptionPane.showMessageDialog(null, "Ganan las negras!", "Ganador", JOptionPane.INFORMATION_MESSAGE);
 				desactivarCeldas();
 			}
-			
+
+			comprobarJaque(tablero,turn);
 			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
+			
 		} else {
 			JOptionPane.showMessageDialog(null, "No puedes moverte a esta celda", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	private void desactivarCeldas() {
-		
-		Tablero tablero = ((Tablero)vista.getPanelTablero());
-	
+
+		Tablero tablero = ((Tablero) vista.getPanelTablero());
+
 		turn = Color.BLACK;
-		
-		for(Component c : tablero.getComponents()) {
-			if(c instanceof Celda) {
+
+		for (Component c : tablero.getComponents()) {
+			if (c instanceof Celda) {
 				c.setEnabled(false);
 			}
 		}
-		
+
+	}
+
+	public static void comprobarJaque(Tablero board, Color color) {
+
+		ArrayList<Coordenada> lista = new ArrayList<Coordenada>();
+
+		if (color == Color.WHITE) {
+
+			for (int i = 0; i < board.getBlancas().size(); i++) {
+
+				Pieza p = board.getBlancas().get(i);
+				lista.addAll(p.getNextMovements());
+
+			}
+
+			if (lista.contains(board.blackKingCoordenada())) {
+				JOptionPane.showMessageDialog(null, "Jaque de las Blancas! Protege tu rey", "Jaque", JOptionPane.INFORMATION_MESSAGE);
+			}
+
+		} else if (color == Color.BLACK) {
+
+			for (int i = 0; i < board.getNegras().size(); i++) {
+
+				Pieza p = board.getNegras().get(i);
+				lista.addAll(p.getNextMovements());
+
+			}
+
+			if (lista.contains(board.whiteKingCoordenada())) {
+				JOptionPane.showMessageDialog(null, "Jaque de  Negras! Protege tu rey", "Jaque", JOptionPane.INFORMATION_MESSAGE);
+			}
+
+		}
+
 	}
 
 }
