@@ -75,6 +75,10 @@ public abstract class Pieza {
 		return tipo.getColor();
 	}
 	
+	public Coordenada getPosicion() {
+		return posicion;
+	}
+	
 	/**
 	 * Indica que tipo de pieza es
 	 * @return tipo

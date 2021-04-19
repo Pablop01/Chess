@@ -95,9 +95,9 @@ public class VistaPrincipal extends JFrame {
 		
 		panelEliminados = new JPFichasEliminadas();
 		
-		panelTurnos = new JPanel();
+		panelTurnos = new JPTurnos();
 		
-		panelMovimientos = new JPanel();
+		panelMovimientos = new JPMovements();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -105,27 +105,27 @@ public class VistaPrincipal extends JFrame {
 					.addContainerGap()
 					.addComponent(panelTablero, GroupLayout.PREFERRED_SIZE, 486, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(panelTurnos, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+							.addComponent(panelTurnos, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panelMovimientos, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(panelMovimientos, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE))
 						.addComponent(panelEliminados, GroupLayout.PREFERRED_SIZE, 386, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(12, Short.MAX_VALUE))
+					.addContainerGap(16, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_contentPane.createSequentialGroup()
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(panelTurnos, GroupLayout.PREFERRED_SIZE, 213, GroupLayout.PREFERRED_SIZE)
-								.addComponent(panelMovimientos, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panelEliminados, GroupLayout.PREFERRED_SIZE, 232, GroupLayout.PREFERRED_SIZE))
+								.addComponent(panelMovimientos, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+								.addComponent(panelTurnos, GroupLayout.PREFERRED_SIZE, 213, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(panelEliminados, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE))
 						.addComponent(panelTablero, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 452, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(120, Short.MAX_VALUE))
+					.addContainerGap(97, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -158,6 +158,12 @@ public class VistaPrincipal extends JFrame {
 	public void setPanelEliminados(JPFichasEliminadas panelEliminados) {
 		this.panelEliminados = panelEliminados;
 	}
+
+
+	public JPanel getPanelMovimientos() {
+		return panelMovimientos;
+	}
+	
 	
 	
 }

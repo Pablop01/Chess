@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
@@ -15,6 +16,8 @@ import es.ieslavereda.Chess.model.common.Celda;
 import es.ieslavereda.Chess.model.common.Color;
 import es.ieslavereda.Chess.model.common.Coordenada;
 import es.ieslavereda.Chess.model.common.GestionFichasEliminadas;
+import es.ieslavereda.Chess.model.common.Movimiento;
+import es.ieslavereda.Chess.model.common.Pawn;
 import es.ieslavereda.Chess.model.common.Pieza;
 import es.ieslavereda.Chess.model.common.Tablero;
 import es.ieslavereda.Chess.vista.JPFichasEliminadas;
@@ -28,6 +31,7 @@ public class ControladorPrincipal implements ActionListener {
 	private Color turn = Color.WHITE;
 	private Preferencias jfPreferencias;
 	private GestionFichasEliminadas gestionFichasEliminadas;
+	private DefaultListModel dlm;
 
 	public ControladorPrincipal(VistaPrincipal vista) {
 		super();
@@ -39,6 +43,10 @@ public class ControladorPrincipal implements ActionListener {
 	private void inicializar() {
 
 		gestionFichasEliminadas = new ControladorFichasEliminadas(vista.getPanelEliminados());
+		
+		dlm = new DefaultListModel<Movimiento>();
+		
+		vista.getPanelMovimientos();
 		
 		Component[] components = vista.getPanelTablero().getComponents();
 
@@ -239,7 +247,14 @@ public class ControladorPrincipal implements ActionListener {
 
 			}
 
+			Movimiento m = null;
+			
 			if(ce.contienePieza()) {
+				
+				if((c.getRow() == 1 || c.getColumn() == 8) && p instanceof Pawn) {
+					m = new Movimiento(p.getPosicion(), c, Movimiento.RISE_KILLING, ce.getPieza(), null, p );
+				}
+				
 				gestionFichasEliminadas.addPiece(ce.getPieza());
 			}
 			
@@ -310,6 +325,10 @@ public class ControladorPrincipal implements ActionListener {
 
 		}
 
+	}
+
+	public Color getTurn() {
+		return turn;
 	}
 
 }

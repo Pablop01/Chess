@@ -78,7 +78,6 @@ public class ControladorFichasEliminadas implements GestionFichasEliminadas {
 
 	@Override
 	public void removeAll() {
-	
 		
 	}
 
