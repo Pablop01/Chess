@@ -2,10 +2,23 @@ package es.ieslavereda.Chess.vista;
 
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
+
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
 import javax.swing.border.TitledBorder;
+
+import es.ieslavereda.Chess.controladores.ControladorPrincipal;
+import es.ieslavereda.Chess.model.common.Celda;
+import es.ieslavereda.Chess.model.common.Color;
+
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 
@@ -30,6 +43,7 @@ public class JPTurnos extends JPanel {
 		panelSuperior.add(lblMove, "cell 0 0,alignx center,aligny center");
 		
 		lblTurn = new JLabel("");
+		lblTurn.setIcon(new ImageIcon(JPTurnos.class.getResource("/es/ieslavereda/Chess/recursos/b_peon.gif")));
 		panelSuperior.add(lblTurn, "cell 0 2,alignx center,aligny center");
 		
 		panelInferior = new JPanel();
@@ -68,7 +82,28 @@ public class JPTurnos extends JPanel {
 		this.lblSelectedPieza = lblSelectedPieza;
 	}
 	
+	public void cambioTurno() {
+		
+		if(ControladorPrincipal.getTurn() == Color.WHITE) {
+			lblTurn.setIcon(new ImageIcon(JPTurnos.class.getResource("/es/ieslavereda/Chess/recursos/b_peon.gif")));
+		}else {
+			lblTurn.setIcon(new ImageIcon(JPTurnos.class.getResource("/es/ieslavereda/Chess/recursos/n_peon.gif")));
+		}
+	}
 	
+    private Image getScaledImage(Image srcImg, int size){
+    	
+        int h = size, w = size;
+        
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+
+        return resizedImg;
+    }
 	
 	
 }

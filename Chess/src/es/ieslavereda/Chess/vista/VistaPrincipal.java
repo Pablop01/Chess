@@ -29,11 +29,11 @@ import javax.swing.border.LineBorder;
 public class VistaPrincipal extends JFrame {
 
 	private JPanel contentPane;
-	private JPanel panelTablero;
-	private JPanel panelTurnos;
-	private JPanel panelMovimientos;
+	private Tablero panelTablero;
+	private JPTurnos panelTurnos;
+	private JPMovements panelMovimientos;
 	private JPFichasEliminadas panelEliminados;
-	private JMenuItem mntmPreferences;
+	private JMenuItem mntmPreferences;;
 	private JMenuItem mntmNewGame;
 
 
@@ -131,7 +131,7 @@ public class VistaPrincipal extends JFrame {
 	}
 
 
-	public JPanel getPanelTablero() {
+	public Tablero getPanelTablero() {
 		return panelTablero;
 	}
 	
@@ -160,10 +160,13 @@ public class VistaPrincipal extends JFrame {
 	}
 
 
-	public JPanel getPanelMovimientos() {
+	public JPMovements getPanelMovimientos() {
 		return panelMovimientos;
 	}
-	
-	
+
+
+	public JPTurnos getPanelTurnos() {
+		return panelTurnos;
+	}
 	
 }

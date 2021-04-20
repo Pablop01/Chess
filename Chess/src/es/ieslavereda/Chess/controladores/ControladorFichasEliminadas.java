@@ -6,6 +6,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -43,6 +44,16 @@ public class ControladorFichasEliminadas implements GestionFichasEliminadas {
 	@Override
 	public void removePiece(Pieza pieza) {
 		
+		JLabel label = fichasEliminadas.get(pieza);
+		
+		if(pieza.getColor() == Color.WHITE) {
+			vista.getPanelBlancas().remove(label);
+			vista.getPanelBlancas().repaint();
+		}else {
+			vista.getPanelNegras().remove(label);
+			vista.getPanelNegras().repaint();
+		}
+		
 		fichasEliminadas.remove(pieza);
 		
 	}
@@ -77,8 +88,18 @@ public class ControladorFichasEliminadas implements GestionFichasEliminadas {
     }
 
 	@Override
-	public void removeAll() {
+	public void removeAll() {		
+		
+		for(Pieza p : fichasEliminadas.keySet()) {
+			
+			removePiece(p);
+			
+		}
+		
+		vista.getPanelBlancas().repaint();
+		vista.getPanelNegras().repaint();
 		
 	}
+
 
 }

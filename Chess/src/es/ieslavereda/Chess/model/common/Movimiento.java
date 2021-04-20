@@ -17,7 +17,7 @@ public class Movimiento implements Serializable {
 	private int tipoAccion;
 	private Pieza pieza;
 	private Pieza piezaGenerada;
-	private Pieza fichaPeon;
+	private Pieza piezaPeon;
 
 	public Movimiento(Coordenada origen, Coordenada destino, int tipoAccion, Pieza ficha, Pieza fichaGenerada, Pieza fichaPeon) {
 
@@ -26,7 +26,7 @@ public class Movimiento implements Serializable {
 		this.tipoAccion = tipoAccion;
 		this.pieza = ficha;
 		this.piezaGenerada = fichaGenerada;
-		this.fichaPeon = fichaPeon;
+		this.piezaPeon = fichaPeon;
 		numeroMovimiento = numero++;
 	}
 
