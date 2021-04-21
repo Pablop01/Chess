@@ -23,83 +23,93 @@ public class ControladorFichasEliminadas implements GestionFichasEliminadas {
 
 	private JPFichasEliminadas vista;
 	private HashMap<Pieza, JLabel> fichasEliminadas;
-	
+
 	public ControladorFichasEliminadas(JPFichasEliminadas panel) {
-		vista=panel;
+		vista = panel;
 		fichasEliminadas = new HashMap<Pieza, JLabel>();
 	}
-	
+
 	@Override
 	public void addPiece(Pieza pieza) {
-		
-		if(pieza.getColor() == Color.WHITE) {		
-			add(pieza,vista.getPanelBlancas());	
-		}else {
-			add(pieza,vista.getPanelNegras());
+
+		if (pieza.getColor() == Color.WHITE) {
+			add(pieza, vista.getPanelBlancas());
+		} else {
+			add(pieza, vista.getPanelNegras());
 		}
-		
-		
+
 	}
 
 	@Override
 	public void removePiece(Pieza pieza) {
-		
+
 		JLabel label = fichasEliminadas.get(pieza);
-		
-		if(pieza.getColor() == Color.WHITE) {
+
+		if (pieza.getColor() == Color.WHITE) {
 			vista.getPanelBlancas().remove(label);
 			vista.getPanelBlancas().repaint();
-		}else {
+		} else {
 			vista.getPanelNegras().remove(label);
 			vista.getPanelNegras().repaint();
 		}
-		
+
 		fichasEliminadas.remove(pieza);
-		
+
 	}
-	
+
 	public void add(Pieza pieza, JPanel panel) {
-		
+
 		JLabel label = new JLabel();
 		label.setOpaque(true);
-		
-        Image image = (new ImageIcon(Celda.class.getResource("/es/ieslavereda/Chess/recursos/" + pieza.getFileName())).getImage());
-        ImageIcon imageIconResized = new ImageIcon(getScaledImage(image,25));
-        label.setIcon(imageIconResized);
-		
+
+		Image image = (new ImageIcon(Celda.class.getResource("/es/ieslavereda/Chess/recursos/" + pieza.getFileName()))
+				.getImage());
+		ImageIcon imageIconResized = new ImageIcon(getScaledImage(image, 25));
+		label.setIcon(imageIconResized);
+
 		panel.add(label);
-		
+
 		fichasEliminadas.put(pieza, label);
-		
+
 	}
-	
-    private Image getScaledImage(Image srcImg, int size){
-    	
-        int h = size, w = size;
-        
-        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = resizedImg.createGraphics();
 
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2.drawImage(srcImg, 0, 0, w, h, null);
-        g2.dispose();
+	private Image getScaledImage(Image srcImg, int size) {
 
-        return resizedImg;
-    }
+		int h = size, w = size;
+
+		BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = resizedImg.createGraphics();
+
+		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.drawImage(srcImg, 0, 0, w, h, null);
+		g2.dispose();
+
+		return resizedImg;
+	}
 
 	@Override
-	public void removeAll() {		
-		
-		for(Pieza p : fichasEliminadas.keySet()) {
-			
-			removePiece(p);
-			
-		}
-		
-		vista.getPanelBlancas().repaint();
-		vista.getPanelNegras().repaint();
-		
-	}
+	public void removeAll() {
 
+		if (fichasEliminadas.size() != 0) {
+
+			Pieza pieza;
+			Iterator<Pieza> it = fichasEliminadas.keySet().iterator();
+
+			while(it.hasNext()) {
+				pieza = it.next();
+				if (pieza.getColor() == Color.WHITE) {
+					vista.getPanelBlancas().remove(fichasEliminadas.get(pieza));
+					vista.getPanelBlancas().repaint();
+				} else {
+					vista.getPanelNegras().remove(fichasEliminadas.get(pieza));
+					vista.getPanelNegras().repaint();
+				}
+				it.remove();
+			}
+
+			vista.getPanelBlancas().repaint();
+			vista.getPanelNegras().repaint();
+		}
+	}
 
 }

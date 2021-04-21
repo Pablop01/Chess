@@ -133,7 +133,7 @@ public class Pawn extends Pieza {
 			tablero.getBlancas().add(new Queen(Color.WHITE, c, tablero));
 		} else if (getColor() == Color.BLACK && posicion.getRow() == 1) {
 			tablero.eliminarPieza(this);
-			tablero.getBlancas().add(new Queen(Color.BLACK, c, tablero));
+			tablero.getNegras().add(new Queen(Color.BLACK, c, tablero));
 		}
 
 	}

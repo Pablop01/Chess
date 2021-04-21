@@ -128,15 +128,21 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 			switch(m.getTipoAccion()) {
 			case Movimiento.NOT_KILL:
 				
-				destino = m.getDestino();
-				origen = m.getOrigen();
-				((Tablero)vista.getPanelTablero()).getPiezaAt(origen).moveTo(destino);
+				((Tablero)vista.getPanelTablero()).getPiezaAt(origen).colocate(destino);
+				Movimiento.increaseNumberOfMovements();
 				
 				break;
+			case Movimiento.KILL:
 				
+				((Tablero)vista.getPanelTablero()).getPiezaAt(origen).colocate(destino);
+				gestionFichasEliminadas.addPiece(m.getPieza());
+				Movimiento.increaseNumberOfMovements();
+				
+				break;
 			default: throw new Exception("Tipo no conocido");
 			}
-			changeTurn();
+			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
+			vista.getPanelTurnos().cambioTurno();
 			
 		} catch(Exception e) {
 			
@@ -160,12 +166,12 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 			switch(m.getTipoAccion()) {
 			case Movimiento.NOT_KILL:
 				
-				((Tablero)vista.getPanelTablero()).getPiezaAt(destino).moveTo(origen);
+				((Tablero)vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
 				
 				break;
 			case Movimiento.KILL:
 	
-				((Tablero)vista.getPanelTablero()).getPiezaAt(destino).moveTo(origen);
+				((Tablero)vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
 				((Tablero)vista.getPanelTablero()).getCeldaAt(destino).setPieza(p);
 				gestionFichasEliminadas.removePiece(m.getPieza());
 				if(p.getColor()== Color.WHITE) {
@@ -175,11 +181,18 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 				}
 				
 				break;
+			case Movimiento.RISE:
+				
+				m.getPiezaPeon().colocate(origen);
+				((Tablero)vista.getPanelTablero()).getCeldaAt(destino).setPieza(null);
+				
+				break;
 			default: throw new Exception("Tipo no conocido");
 			}
+			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
+			vista.getPanelTurnos().cambioTurno();
 			
 			Movimiento.decreaseNumberOfMovements();
-			changeTurn();
 			
 		} catch (ArrayIndexOutOfBoundsException ae) {
 
@@ -187,7 +200,6 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 		} catch (Exception e) {
 			
-			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
@@ -195,11 +207,11 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 	private void newGame() {
 
-		((Tablero) vista.getPanelTablero()).reiniciar();
-		gestionFichasEliminadas.removeAll();
 		dlm.removeAllElements();
+		gestionFichasEliminadas.removeAll();
 		Movimiento.setNumero(1);
 		turn = Color.WHITE;
+		((Tablero) vista.getPanelTablero()).reiniciar();
 
 	}
 
@@ -312,6 +324,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 					p = null;
 				} else {
 
+					vista.getPanelTurnos().selectedPiece(p);
 					pintarBordes();
 
 				}
@@ -381,6 +394,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 			}
 
 			p = null;
+			vista.getPanelTurnos().selectedPieceNull();
 
 			if (!tablero.blackKingIsAlive()) {
 				JOptionPane.showMessageDialog(null, "Ganan las blancas!", "Ganador", JOptionPane.INFORMATION_MESSAGE);
@@ -394,6 +408,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 			comprobarJaque(tablero, turn);
 			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
+			vista.getPanelTurnos().cambioTurno();
 
 		} else {
 			JOptionPane.showMessageDialog(null, "No puedes moverte a esta celda", "Error", JOptionPane.ERROR_MESSAGE);
@@ -453,15 +468,6 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 	public static Color getTurn() {
 		return turn;
 	}
-	
-	public void changeTurn() {
-		
-		if(turn == Color.WHITE) {
-			turn = Color.BLACK;
-		}else {
-			turn = Color.WHITE;
-		}
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -473,7 +479,6 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 	            previousMovement();
 	        }
 	    }
-
 		
 	}
 

@@ -96,6 +96,10 @@ public class Movimiento implements Serializable {
 		return piezaGenerada;
 	}
 
+	public Pieza getPiezaPeon() {
+		return piezaPeon;
+	}
+
 	public void setPiezaGenerada(Pieza piezaGenerada) {
 		this.piezaGenerada = piezaGenerada;
 	}

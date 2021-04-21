@@ -18,6 +18,7 @@ import javax.swing.border.TitledBorder;
 import es.ieslavereda.Chess.controladores.ControladorPrincipal;
 import es.ieslavereda.Chess.model.common.Celda;
 import es.ieslavereda.Chess.model.common.Color;
+import es.ieslavereda.Chess.model.common.Pieza;
 
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
@@ -89,6 +90,19 @@ public class JPTurnos extends JPanel {
 		}else {
 			lblTurn.setIcon(new ImageIcon(JPTurnos.class.getResource("/es/ieslavereda/Chess/recursos/n_peon.gif")));
 		}
+	}
+	
+	public void selectedPiece(Pieza p) {
+		
+		if(p != null) {
+			lblSelectedPieza.setIcon(new ImageIcon(JPTurnos.class.getResource("/es/ieslavereda/Chess/recursos/" + p.getFileName())));
+		}
+	}
+	
+	public void selectedPieceNull() {
+		
+		lblSelectedPieza.setIcon(null);
+		
 	}
 	
     private Image getScaledImage(Image srcImg, int size){

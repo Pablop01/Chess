@@ -154,7 +154,6 @@ public class Tablero extends JPanel{
 		int numero;
 		
 		for (int i = 8; i > 0; i--) {
-			this.add(getNewLabel(String.valueOf(i)));
 			for(int j = 0; j< 8; j++) {
 				
 				numero = i+j;

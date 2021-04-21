@@ -33,7 +33,7 @@ public abstract class Pieza {
 	 * @param c Coordenada obtenida por parametro
 	 */
 	
-	protected void colocate(Coordenada c) {
+	public void colocate(Coordenada c) {
 		
 		tablero.getCeldaAt(posicion).setPieza(null);
 		posicion = c;
