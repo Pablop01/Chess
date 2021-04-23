@@ -1,12 +1,14 @@
 package es.ieslavereda.Chess.model.common;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author ppereaf
  *
  */
 
-public class Coordenada {
+public class Coordenada implements Serializable {
 
 	private int row;
 	private char column;

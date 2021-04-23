@@ -6,6 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -16,8 +22,10 @@ import java.util.Stack;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import es.ieslavereda.Chess.config.MyConfig;
 import es.ieslavereda.Chess.model.common.Celda;
@@ -65,7 +73,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 				((Celda) c).addActionListener(this);
 			}
 		}
-		
+
 		// Añadir MouseListener
 		vista.getPanelMovimientos().getList().addMouseListener(this);
 
@@ -74,12 +82,16 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 		vista.getMntmNewGame().addActionListener(this);
 		vista.getPanelMovimientos().getBtnNext().addActionListener(this);
 		vista.getPanelMovimientos().getBtnPreview().addActionListener(this);
+		vista.getMntmSave().addActionListener(this);
+		vista.getMntmOpen().addActionListener(this);
 
 		// Añadir ActionCommand
 		vista.getMntmPreferences().setActionCommand("Abrir preferencias");
 		vista.getMntmNewGame().setActionCommand("New Game");
+		vista.getMntmSave().setActionCommand("Save");
 		vista.getPanelMovimientos().getBtnNext().setActionCommand("Next");
 		vista.getPanelMovimientos().getBtnPreview().setActionCommand("Previous");
+		vista.getMntmOpen().setActionCommand("Open");
 
 	}
 
@@ -110,96 +122,245 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 			nextMovement();
 		} else if (comando.equals("Previous")) {
 			previousMovement();
+		} else if (comando.equals("Save")) {
+			saveGame();
+		} else if (comando.equals("Open")) {
+			try {
+				openGame();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	private void openGame() throws Exception {
+
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileFilter(new FileNameExtensionFilter("Ajedrez data file", "data"));
+
+		int opcion = jfc.showOpenDialog(vista);
+		if (opcion == JFileChooser.APPROVE_OPTION) {
+
+			try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(jfc.getSelectedFile()))) {
+
+				stack = (Deque<Movimiento>) ois.readObject();
+				dlm = (DefaultListModel<Movimiento>) ois.readObject();
+				vista.getPanelMovimientos().getList().setModel(dlm);
+				colorcarPiezas();
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
+	private void colorcarPiezas() throws Exception {
+
+		Coordenada destino;
+		Coordenada origen;
+		Movimiento m;
+
+		for (int i = 0; i < dlm.getSize(); i++) {
+
+			m = dlm.get(i);
+
+			nextMovement(m);
+
+		}
+
+	}
+
+	private void saveGame() {
+
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileFilter(new FileNameExtensionFilter("Ajedrez data file", "data"));
+
+		int opcion = jfc.showSaveDialog(vista);
+		if (opcion == JFileChooser.APPROVE_OPTION) {
+
+			try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jfc.getSelectedFile()))) {
+
+				oos.writeObject(stack);
+				oos.writeObject(dlm);
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 
 	}
 
 	private void nextMovement() {
-		
+
 		try {
-			
+
 			Movimiento m = stack.pop();
-			Coordenada origen,destino;
-			dlm.addElement(m);
-			
-			destino = m.getDestino();
-			origen = m.getOrigen();
-			
-			switch(m.getTipoAccion()) {
-			case Movimiento.NOT_KILL:
-				
-				((Tablero)vista.getPanelTablero()).getPiezaAt(origen).colocate(destino);
-				Movimiento.increaseNumberOfMovements();
-				
-				break;
-			case Movimiento.KILL:
-				
-				((Tablero)vista.getPanelTablero()).getPiezaAt(origen).colocate(destino);
-				gestionFichasEliminadas.addPiece(m.getPieza());
-				Movimiento.increaseNumberOfMovements();
-				
-				break;
-			default: throw new Exception("Tipo no conocido");
-			}
-			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
-			vista.getPanelTurnos().cambioTurno();
-			
-		} catch(Exception e) {
-			
+			nextMovement(m);
+
+		} catch (Exception e) {
+
 			JOptionPane.showMessageDialog(null, "No hay movimientos para rehacer", "Error", JOptionPane.ERROR_MESSAGE);
-			
+
 		}
-		
+
+	}
+
+	private void nextMovement(Movimiento m) throws Exception {
+		Coordenada origen, destino;
+		dlm.addElement(m);
+
+		destino = m.getDestino();
+		origen = m.getOrigen();
+
+		switch (m.getTipoAccion()) {
+		case Movimiento.NOT_KILL:
+
+			((Tablero) vista.getPanelTablero()).getPiezaAt(origen).colocate(destino);
+			Movimiento.increaseNumberOfMovements();
+
+			break;
+		case Movimiento.KILL:
+
+			((Tablero) vista.getPanelTablero()).getPiezaAt(origen).colocate(destino);
+			gestionFichasEliminadas.addPiece(m.getPieza());
+			Movimiento.increaseNumberOfMovements();
+
+			break;
+
+		case Movimiento.RISE:
+
+			m.getPiezaGenerada().colocate(destino);
+			((Tablero) vista.getPanelTablero()).getCeldaAt(origen).setPieza(null);
+			if (m.getPiezaPeon().getColor() == Color.WHITE) {
+				((Tablero) vista.getPanelTablero()).getBlancas().add(m.getPiezaGenerada());
+				((Tablero) vista.getPanelTablero()).getBlancas().remove(m.getPiezaPeon());
+			} else {
+				((Tablero) vista.getPanelTablero()).getNegras().add(m.getPiezaGenerada());
+				((Tablero) vista.getPanelTablero()).getNegras().remove(m.getPiezaPeon());
+			}
+			Movimiento.increaseNumberOfMovements();
+
+			break;
+		case Movimiento.RISE_KILLING:
+
+			m.getPiezaGenerada().colocate(destino);
+			((Tablero) vista.getPanelTablero()).getCeldaAt(origen).setPieza(null);
+
+			if (m.getPiezaPeon().getColor() == Color.WHITE) {
+				((Tablero) vista.getPanelTablero()).getBlancas().add(m.getPiezaGenerada());
+				((Tablero) vista.getPanelTablero()).getBlancas().remove(m.getPiezaPeon());
+				((Tablero) vista.getPanelTablero()).getNegras().add(m.getPieza());
+			} else {
+				((Tablero) vista.getPanelTablero()).getNegras().add(m.getPiezaGenerada());
+				((Tablero) vista.getPanelTablero()).getNegras().remove(m.getPiezaPeon());
+				((Tablero) vista.getPanelTablero()).getBlancas().add(m.getPieza());
+			}
+
+			gestionFichasEliminadas.addPiece(m.getPieza());
+			Movimiento.increaseNumberOfMovements();
+
+			break;
+
+		default:
+			throw new Exception("Tipo no conocido");
+		}
+		turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
+		vista.getPanelTurnos().cambioTurno();
 	}
 
 	private void previousMovement() {
 
 		try {
 
-			Movimiento m = dlm.remove(dlm.getSize()-1);
+			Movimiento m = dlm.remove(dlm.getSize() - 1);
 			stack.push(m);
-			Coordenada origen,destino;
+			Coordenada origen, destino;
 			destino = m.getDestino();
 			origen = m.getOrigen();
 			Pieza p = m.getPieza();
-			
-			switch(m.getTipoAccion()) {
+
+			switch (m.getTipoAccion()) {
 			case Movimiento.NOT_KILL:
-				
-				((Tablero)vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
-				
+
+				((Tablero) vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
+
 				break;
 			case Movimiento.KILL:
-	
-				((Tablero)vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
-				((Tablero)vista.getPanelTablero()).getCeldaAt(destino).setPieza(p);
+
+				((Tablero) vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
+				((Tablero) vista.getPanelTablero()).getCeldaAt(destino).setPieza(p);
 				gestionFichasEliminadas.removePiece(m.getPieza());
-				if(p.getColor()== Color.WHITE) {
+				if (p.getColor() == Color.WHITE) {
 					vista.getPanelTablero().getBlancas().add(p);
-				}else {
+				} else {
 					vista.getPanelTablero().getNegras().add(p);
 				}
-				
+
 				break;
 			case Movimiento.RISE:
-				
+
 				m.getPiezaPeon().colocate(origen);
-				((Tablero)vista.getPanelTablero()).getCeldaAt(destino).setPieza(null);
-				
+				((Tablero) vista.getPanelTablero()).getCeldaAt(destino).setPieza(null);
+				if (m.getPiezaPeon().getColor() == Color.WHITE) {
+					((Tablero) vista.getPanelTablero()).getBlancas().remove(m.getPiezaGenerada());
+					((Tablero) vista.getPanelTablero()).getBlancas().add(m.getPiezaPeon());
+				} else {
+					((Tablero) vista.getPanelTablero()).getNegras().remove(m.getPiezaGenerada());
+					((Tablero) vista.getPanelTablero()).getNegras().add(m.getPiezaPeon());
+				}
+
 				break;
-			default: throw new Exception("Tipo no conocido");
+
+			case Movimiento.RISE_KILLING:
+
+				m.getPiezaPeon().colocate(origen);
+				((Tablero) vista.getPanelTablero()).getCeldaAt(destino).setPieza(m.getPieza());
+
+				if (m.getPiezaPeon().getColor() == Color.WHITE) {
+					((Tablero) vista.getPanelTablero()).getBlancas().remove(m.getPiezaGenerada());
+					((Tablero) vista.getPanelTablero()).getBlancas().add(m.getPiezaPeon());
+					((Tablero) vista.getPanelTablero()).getNegras().remove(m.getPieza());
+				} else {
+					((Tablero) vista.getPanelTablero()).getNegras().remove(m.getPiezaGenerada());
+					((Tablero) vista.getPanelTablero()).getNegras().add(m.getPiezaPeon());
+					((Tablero) vista.getPanelTablero()).getBlancas().remove(m.getPieza());
+				}
+
+				gestionFichasEliminadas.removePiece(m.getPieza());
+
+				break;
+
+			default:
+				throw new Exception("Tipo no conocido");
 			}
 			turn = Color.values()[(turn.ordinal() + 1) % Color.values().length];
 			vista.getPanelTurnos().cambioTurno();
-			
+
 			Movimiento.decreaseNumberOfMovements();
-			
+
 		} catch (ArrayIndexOutOfBoundsException ae) {
 
 			JOptionPane.showMessageDialog(null, "No hay movimientos para deshacer", "Error", JOptionPane.ERROR_MESSAGE);
 
 		} catch (Exception e) {
-			
+
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
@@ -211,8 +372,32 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 		gestionFichasEliminadas.removeAll();
 		Movimiento.setNumero(1);
 		turn = Color.WHITE;
+		despintarBordes();
+		vista.getPanelTurnos().selectedPieceNull();
+		vista.getPanelTurnos().cambioTurno();
+		p = null;
 		((Tablero) vista.getPanelTablero()).reiniciar();
 
+	}
+
+	private void despintarBordes() {
+
+		if (p != null) {
+
+			for (Coordenada c2 : p.getNextMovements()) {
+
+				Celda ce = vista.getTablero().get(c2);
+
+				ce.resaltar(java.awt.Color.GRAY, 1);
+
+				if (ce.contienePieza()) {
+					if (ce.getPieza().getColor() != turn) {
+						ce.resaltar(java.awt.Color.GRAY, 1);
+					}
+				}
+
+			}
+		}
 	}
 
 	private void cambiarColorBordeCeldaComer() {
@@ -471,38 +656,38 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		
+
 		Component c = arg0.getComponent();
-	    if (c == vista.getPanelMovimientos().getList()) {
-	        int index = vista.getPanelMovimientos().getList().getSelectedIndex();
-	        while (dlm.getSize() > index) {
-	            previousMovement();
-	        }
-	    }
-		
+		if (c == vista.getPanelMovimientos().getList()) {
+			int index = vista.getPanelMovimientos().getList().getSelectedIndex();
+			while (dlm.getSize() > index) {
+				previousMovement();
+			}
+		}
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

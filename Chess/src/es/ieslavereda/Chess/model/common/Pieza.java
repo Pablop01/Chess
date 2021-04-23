@@ -1,6 +1,7 @@
 package es.ieslavereda.Chess.model.common;
 
 import java.awt.Component;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  *
  */
 
-public abstract class Pieza {
+public abstract class Pieza implements Serializable {
 
 	protected Tipo tipo;
 	protected Tablero tablero;

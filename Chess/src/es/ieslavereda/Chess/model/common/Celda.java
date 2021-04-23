@@ -98,7 +98,9 @@ public class Celda extends JButton implements Serializable{
 		}	
 	}
 	
-
+	public void resaltar(java.awt.Color color, int size) { 
+		setBorder(new LineBorder(color, size));
+	}
 	
 	@Override
 	public String toString() {

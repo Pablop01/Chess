@@ -35,6 +35,8 @@ public class VistaPrincipal extends JFrame {
 	private JPFichasEliminadas panelEliminados;
 	private JMenuItem mntmPreferences;;
 	private JMenuItem mntmNewGame;
+	private JMenuItem mntmOpen;
+	private JMenuItem mntmSave;
 
 
 	/**
@@ -57,10 +59,10 @@ public class VistaPrincipal extends JFrame {
 		JSeparator separator_1 = new JSeparator();
 		mnFile.add(separator_1);
 		
-		JMenuItem mntmOpen = new JMenuItem("Open");
+		mntmOpen = new JMenuItem("Open");
 		mnFile.add(mntmOpen);
 		
-		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave = new JMenuItem("Save");
 		mnFile.add(mntmSave);
 		
 		JSeparator separator = new JSeparator();
@@ -167,6 +169,16 @@ public class VistaPrincipal extends JFrame {
 
 	public JPTurnos getPanelTurnos() {
 		return panelTurnos;
+	}
+
+
+	public JMenuItem getMntmOpen() {
+		return mntmOpen;
+	}
+
+
+	public JMenuItem getMntmSave() {
+		return mntmSave;
 	}
 	
 }
