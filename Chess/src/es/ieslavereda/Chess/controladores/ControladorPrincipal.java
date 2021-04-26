@@ -50,11 +50,13 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 	private GestionFichasEliminadas gestionFichasEliminadas;
 	private DefaultListModel<Movimiento> dlm;
 	private Deque<Movimiento> stack;
+	private ArrayList<Movimiento> movimientos;
 
 	public ControladorPrincipal(VistaPrincipal vista) {
 		super();
 		this.vista = vista;
 		stack = new ArrayDeque<Movimiento>();
+		movimientos = new ArrayList<Movimiento>();
 		inicializar();
 	}
 
@@ -137,6 +139,8 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 	private void openGame() throws Exception {
 
+		newGame();
+		
 		JFileChooser jfc = new JFileChooser();
 		jfc.setFileFilter(new FileNameExtensionFilter("Ajedrez data file", "data"));
 
@@ -145,9 +149,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 			try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(jfc.getSelectedFile()))) {
 
-				stack = (Deque<Movimiento>) ois.readObject();
-				dlm = (DefaultListModel<Movimiento>) ois.readObject();
-				vista.getPanelMovimientos().getList().setModel(dlm);
+				movimientos = (ArrayList<Movimiento>) ois.readObject();
 				colorcarPiezas();
 
 			} catch (FileNotFoundException e) {
@@ -167,13 +169,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 	private void colorcarPiezas() throws Exception {
 
-		Coordenada destino;
-		Coordenada origen;
-		Movimiento m;
-
-		for (int i = 0; i < dlm.getSize(); i++) {
-
-			m = dlm.get(i);
+		for (Movimiento m : movimientos) {
 
 			nextMovement(m);
 
@@ -186,13 +182,23 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 		JFileChooser jfc = new JFileChooser();
 		jfc.setFileFilter(new FileNameExtensionFilter("Ajedrez data file", "data"));
 
+		Movimiento m;
+		
+		for (int i = 0; i < dlm.getSize(); i++) {
+
+			m = dlm.get(i);
+			movimientos.add(m);
+
+			
+		}
+		
 		int opcion = jfc.showSaveDialog(vista);
 		if (opcion == JFileChooser.APPROVE_OPTION) {
-
+		
 			try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jfc.getSelectedFile()))) {
 
-				oos.writeObject(stack);
-				oos.writeObject(dlm);
+				oos.writeObject(movimientos);
+				
 
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -297,8 +303,10 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 
 			switch (m.getTipoAccion()) {
 			case Movimiento.NOT_KILL:
-
-				((Tablero) vista.getPanelTablero()).getPiezaAt(destino).colocate(origen);
+				
+				((Tablero) vista.getPanelTablero()).getPiezaAt(destino).setPosicion(origen);
+				((Tablero) vista.getPanelTablero()).getCeldaAt(origen).setPieza(((Tablero) vista.getPanelTablero()).getPiezaAt(destino));
+				((Tablero) vista.getPanelTablero()).getCeldaAt(destino).setPieza(null);
 
 				break;
 			case Movimiento.KILL:
@@ -381,7 +389,7 @@ public class ControladorPrincipal implements ActionListener, MouseListener {
 	}
 
 	private void despintarBordes() {
-
+				
 		if (p != null) {
 
 			for (Coordenada c2 : p.getNextMovements()) {

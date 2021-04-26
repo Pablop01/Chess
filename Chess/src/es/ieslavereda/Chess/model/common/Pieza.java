@@ -94,6 +94,10 @@ public abstract class Pieza implements Serializable {
 		return tipo.getFilename();
 	}
 	
+	public void setPosicion(Coordenada posicion) {
+		this.posicion = posicion;
+	}
+
 	public abstract ArrayList<Coordenada> getNextMovements();
 	
 }
